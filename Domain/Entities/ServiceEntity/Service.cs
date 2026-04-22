@@ -11,7 +11,7 @@ namespace Domain.Entities.ServiceEntity
         public Guid Id { get; set; }
         public ServiceType Type { get; set; }
         public double Price { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }

@@ -1,4 +1,5 @@
-﻿using Domain.Entities.AmenityEntity;
+﻿using Application.Common.Interfaces;
+using Domain.Entities.AmenityEntity;
 using Domain.Entities.BlackListEntity;
 using Domain.Entities.BookingEntity;
 using Domain.Entities.BookingRoomEntity;
@@ -27,7 +28,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
 {
-    public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+    public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>, IAppDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)

@@ -15,11 +15,13 @@ namespace Infrastructure.Data.Config.ServiceConfig
             builder.HasOne(s => s.Company)
                 .WithMany(c => c.Services)
                 .HasForeignKey(s => s.CompanyId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(s => s.Branch)
                 .WithMany(c => c.Services)
                 .HasForeignKey(s => s.BranchId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasQueryFilter(s => !s.IsDeleted);
 
         }
     }

@@ -26,7 +26,7 @@ namespace Domain.Entities.CompanyEntity
         [MaxLength(255, ErrorMessage = "address must be less than 256")]
         [MinLength(50, ErrorMessage = "address must be greater than 49")]
         public required string Address { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }

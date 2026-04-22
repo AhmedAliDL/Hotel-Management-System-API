@@ -28,7 +28,7 @@ namespace Domain.Entities.BranchEntity
         [MaxLength(255, ErrorMessage = "Branch`s address must be less than 256")]
         [MinLength(50, ErrorMessage = "Branch`s address must be greater than 49")]
         public required string Address { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public Guid ConfirmedCompanyIdentifier { get; set; }
         public DateTime CreatedAt { get; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; }

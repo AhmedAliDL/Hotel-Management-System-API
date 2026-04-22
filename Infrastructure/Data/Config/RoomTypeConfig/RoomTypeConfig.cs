@@ -15,13 +15,13 @@ namespace Infrastructure.Data.Config.RoomTypeConfig
             builder.HasOne(r => r.Company)
                 .WithMany(c => c.RoomTypes)
                 .HasForeignKey(r => r.CompanyId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(r => r.Branch)
                 .WithMany(c => c.RoomTypes)
                 .HasForeignKey(r => r.BranchId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-
+            builder.HasQueryFilter(r => !r.IsDeleted);
         }
     }
 }

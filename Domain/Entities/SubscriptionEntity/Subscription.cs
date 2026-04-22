@@ -8,6 +8,7 @@ namespace Domain.Entities.SubscriptionEntity
     {
         public Guid Id { get; set; }
         public SubscriptionPlan PlanName { get; set; }
+        public double PlanPrice { get; set; }
         public int MaximumBranches { get; set; }
         public int MaximumGuests { get; set; }
         public DateTime StartsAt { get; set; }
