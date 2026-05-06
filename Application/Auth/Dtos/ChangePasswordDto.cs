@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Application.Auth.Dtos
 {
     public sealed record ChangePasswordDto
     {
-        [EmailAddress(ErrorMessage = "Invalide email address syntax")]
+        [JsonIgnore]
         public string UserEmail { get; set; }
         [DataType(DataType.Password)]
         public string CurrentPassword { get; set; }

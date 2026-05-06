@@ -6,7 +6,7 @@ namespace Application.Auth.Commands.EmailConfirm
     {
         public SendEmailConfirmationTokenCommandValidator()
         {
-            RuleFor(e => e.userEmail)
+            RuleFor(e => e.UserEmail)
                 .NotEmpty()
                 .WithMessage("Email should not be empty");
         }

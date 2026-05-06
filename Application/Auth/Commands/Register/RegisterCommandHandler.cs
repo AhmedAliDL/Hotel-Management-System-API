@@ -1,4 +1,5 @@
-﻿using Domain.Entities.User;
+﻿using Application.Common.Interfaces;
+using Domain.Entities.User;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -7,11 +8,12 @@ namespace Application.Auth.Commands.Register
     public sealed class RegisterCommandHandler : IRequestHandler<RegisterCommand, Guid>
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole<Guid>> _roleManager;
-        public RegisterCommandHandler(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager)
+        private readonly IRoleService _roleService;
+        public RegisterCommandHandler(UserManager<ApplicationUser> userManager, IRoleService roleService)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
+            _roleService = roleService;
+
         }
         public async Task<Guid> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
@@ -29,15 +31,7 @@ namespace Application.Auth.Commands.Register
             {
                 string roleName = "User";
 
-                if (!await _roleManager.RoleExistsAsync(roleName))
-                {
-                    await _roleManager.CreateAsync(
-                        new IdentityRole<Guid>
-                        {
-                            Name = roleName
-                        }
-                        );
-                }
+                await _roleService.CreateRoleAsync(roleName);
                 await _userManager.AddToRoleAsync(newUser, roleName);
             }
 

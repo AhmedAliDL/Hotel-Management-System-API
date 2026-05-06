@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Application.Auth.Commands.SendPasswordResetToken
 {
-    public class SendPasswordResetTokenCommandHandler : IRequestHandler<SendPasswordResetTokenCommand,ResponseResult<bool>>
+    public class SendPasswordResetTokenCommandHandler : IRequestHandler<SendPasswordResetTokenCommand, ResponseResult<bool>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSenderService _emailSenderService;
@@ -24,7 +24,7 @@ namespace Application.Auth.Commands.SendPasswordResetToken
         public async Task<ResponseResult<bool>> Handle(SendPasswordResetTokenCommand request, CancellationToken cancellationToken)
         {
 
-            var user = await _userManager.FindByEmailAsync(request.email);
+            var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
                 return ResponseResult<bool>.Failure("User not found");
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);

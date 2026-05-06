@@ -2,9 +2,7 @@
 {
     public enum PlanStatus
     {
-        Trail,
         Active,
-        Expired,
-        Canceled
+        Expired
     }
 }

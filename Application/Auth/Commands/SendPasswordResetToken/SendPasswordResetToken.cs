@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.Auth.Commands.SendPasswordResetToken
 {
-    public record SendPasswordResetTokenCommand(string email) : IRequest<ResponseResult<bool>>;
+    public record SendPasswordResetTokenCommand(string Email) : IRequest<ResponseResult<bool>>;
 
 
 }

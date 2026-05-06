@@ -29,7 +29,7 @@ namespace Domain.Entities.GuestEntity
         public Gender GuestGender { get; set; }
         [EmailAddress(ErrorMessage = "Enter valid email format for example:ex@gmail.com")]
         public required string Email { get; set; }
-        public PreferredLanguage GeustPrefereedLanguage { get; set; }
+        public PreferredLanguage GeustPreferredLanguage { get; set; }
 
         public DateTime CreatedAt { get; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; }

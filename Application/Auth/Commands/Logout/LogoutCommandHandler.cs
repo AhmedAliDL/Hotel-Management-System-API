@@ -14,7 +14,7 @@ namespace Application.Auth.Commands.Logout
 
         async Task<ResponseResult<bool>> IRequestHandler<LogoutCommand, ResponseResult<bool>>.Handle(LogoutCommand request, CancellationToken cancellationToken)
         {
-            return await _jwtTokenService.RevokeTokenAsync(request.refreshToken);
+            return await _jwtTokenService.RevokeTokenAsync(request.RefreshToken);
         }
     }
 

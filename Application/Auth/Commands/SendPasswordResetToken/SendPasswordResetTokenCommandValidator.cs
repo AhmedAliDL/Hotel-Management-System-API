@@ -6,7 +6,7 @@ namespace Application.Auth.Commands.SendPasswordResetToken
     {
         public SendPasswordResetTokenCommandValidator()
         {
-            RuleFor(e => e.email)
+            RuleFor(e => e.Email)
                 .NotEmpty()
                 .WithMessage("Email should not be empty");
         }

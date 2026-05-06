@@ -3,8 +3,7 @@
     public enum SubscriptionPlan
     {
         Free,
-        Basic,
-        Pro,
-        Enterprise
+        Standard,
+        Premium
     }
 }

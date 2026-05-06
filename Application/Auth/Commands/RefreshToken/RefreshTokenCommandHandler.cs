@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Application.Auth.Commands.RefreshToken
 {
-    public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand,ResponseResult<RefreshTokenDto>>
+    public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, ResponseResult<RefreshTokenDto>>
     {
         private readonly IJwtTokenService _jwtTokenService;
         public RefreshTokenCommandHandler(IJwtTokenService jwtTokenService)
@@ -14,7 +14,7 @@ namespace Application.Auth.Commands.RefreshToken
         }
         public async Task<ResponseResult<RefreshTokenDto>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
-            return await _jwtTokenService.RefreshTokenAsync(request.refreshToken);
+            return await _jwtTokenService.RefreshTokenAsync(request.RefreshToken);
         }
     }
 

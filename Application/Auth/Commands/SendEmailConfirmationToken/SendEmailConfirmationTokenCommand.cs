@@ -3,5 +3,5 @@ using MediatR;
 
 namespace Application.Auth.Commands.EmailConfirm
 {
-    public record SendEmailConfirmationTokenCommand(string userEmail) : IRequest<ResponseResult<bool>>;
+    public record SendEmailConfirmationTokenCommand(string UserEmail) : IRequest<ResponseResult<bool>>;
 }

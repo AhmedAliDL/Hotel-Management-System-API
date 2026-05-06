@@ -62,6 +62,7 @@ namespace Infrastructure.Data
             base.OnModelCreating(builder);
 
             builder.ApplyConfigurationsFromAssembly(typeof(CompanyConfig).Assembly);
+
         }
     }
 }

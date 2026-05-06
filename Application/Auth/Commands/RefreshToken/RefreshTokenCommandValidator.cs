@@ -6,7 +6,7 @@ namespace Application.Auth.Commands.RefreshToken
     {
         public RefreshTokenCommandValidator()
         {
-            RuleFor(rt => rt.refreshToken)
+            RuleFor(rt => rt.RefreshToken)
                 .NotEmpty()
                 .WithMessage("RefreshToken must be included.");
         }

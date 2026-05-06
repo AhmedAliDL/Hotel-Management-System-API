@@ -14,10 +14,10 @@ namespace Application.Auth.Commands.ResetPassword
         }
         public async Task<ResponseResult<bool>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(request.resetPasswordDto.UserEmail);
+            var user = await _userManager.FindByEmailAsync(request.ResetPasswordDto.UserEmail);
             if (user == null)
                 return ResponseResult<bool>.Failure("User not found");
-            var result = await _userManager.ResetPasswordAsync(user, request.resetPasswordDto.ValidationToken, request.resetPasswordDto.NewPassword);
+            var result = await _userManager.ResetPasswordAsync(user, request.ResetPasswordDto.ValidationToken, request.ResetPasswordDto.NewPassword);
             if (!result.Succeeded)
                 return ResponseResult<bool>.Failure("Invalid validation token");
             return ResponseResult<bool>.Success(true);

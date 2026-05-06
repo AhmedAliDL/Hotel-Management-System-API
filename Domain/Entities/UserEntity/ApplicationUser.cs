@@ -9,8 +9,8 @@ namespace Domain.Entities.User
     public class ApplicationUser : IdentityUser<Guid>
     {
 
-        public string Fname { get; set; }
-        public string Lname { get; set; }
+        public required string Fname { get; set; }
+        public required string Lname { get; set; }
         public bool IsActive { get; set; } = true;
         public DateTime LastLoginAt { get; set; }
         public DateTime CreatedAt { get; } = DateTime.UtcNow;

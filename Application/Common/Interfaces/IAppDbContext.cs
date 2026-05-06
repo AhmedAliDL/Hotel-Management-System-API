@@ -45,6 +45,8 @@ namespace Application.Common.Interfaces
         DbSet<Tax> Taxes { get; set; }
         DbSet<BlackList> BlackLists { get; set; }
         DbSet<InvoiceTax> InvoiceTaxes { get; set; }
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 
 }

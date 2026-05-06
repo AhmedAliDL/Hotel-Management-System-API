@@ -23,7 +23,7 @@ namespace Application.Auth.Commands.EmailConfirm
 
         public async Task<ResponseResult<bool>> Handle(SendEmailConfirmationTokenCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(request.userEmail);
+            var user = await _userManager.FindByEmailAsync(request.UserEmail);
             if (user == null)
             {
                 ResponseResult<bool>.Failure("User not found!");

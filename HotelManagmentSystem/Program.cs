@@ -1,4 +1,4 @@
-using Application.Auth.Behavior;
+using Application.Behavior;
 using Application.Common.Interfaces;
 using Domain.Entities.User;
 using FluentValidation;
@@ -7,7 +7,9 @@ using Infrastructure.Data.Interceptors;
 using Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -66,20 +68,79 @@ builder.Services.Scan(
                .AsImplementedInterfaces()
                .WithScopedLifetime()
         );
+builder.Services.AddRateLimiter(options =>
+    options.AddFixedWindowLimiter("auth limiter", o =>
+    {
+        o.PermitLimit = 5;
+        o.Window = TimeSpan.FromMinutes(1);
+    })
+    );
 
 var app = builder.Build();
 
+//Create Admin User.
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleService = services.GetRequiredService<IRoleService>();
+
+    var adminEmail = builder.Configuration["Admin:Email"];
+    var adminPassword = builder.Configuration["Admin:Password"];
+    var adminRole = builder.Configuration["Admin:Role"];
+
+    var adminUser = await userManager.FindByEmailAsync(adminEmail!);
+
+    if (adminUser == null)
+    {
+        adminUser = new ApplicationUser
+        {
+            Fname = "Ahmed",
+            Lname = "Ali",
+            Email = adminEmail!,
+            UserName = adminEmail!,
+            EmailConfirmed = true
+        };
+
+        await userManager.CreateAsync(adminUser, adminPassword!);
+
+        await roleService.CreateRoleAsync(adminRole!);
+
+        await userManager.AddToRoleAsync(adminUser, adminRole!);
+
+        await userManager.RemoveFromRoleAsync(adminUser, "User");
+    }
+
+}
 // Configure the HTTP request pipeline.
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseAuthentication();
+app.UseExceptionHandler(appBuilder =>
+{
+    appBuilder.Run(async context =>
+    {
+        context.Response.StatusCode = 400;
+        context.Response.ContentType = "application/json";
+        var error = context.Features.Get<IExceptionHandlerFeature>();
+        if (error?.Error is ValidationException vEx)
+            await context.Response.WriteAsJsonAsync(new { errors = vEx.Errors.Select(e => e.ErrorMessage) });
+    });
+});
+
+
 
 app.UseHttpsRedirection();
 
+app.UseRateLimiter();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -4,6 +4,6 @@ using MediatR;
 
 namespace Application.Auth.Commands.ResetPassword
 {
-    public record ResetPasswordCommand(ResetPasswordDto resetPasswordDto) : IRequest<ResponseResult<bool>>;
+    public record ResetPasswordCommand(ResetPasswordDto ResetPasswordDto) : IRequest<ResponseResult<bool>>;
 
 }

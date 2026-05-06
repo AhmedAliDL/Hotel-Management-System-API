@@ -6,7 +6,7 @@ namespace Application.Auth.Commands.Logout
     {
         public LogoutCommandValidator()
         {
-            RuleFor(l => l.refreshToken)
+            RuleFor(l => l.RefreshToken)
                 .NotEmpty()
                 .WithMessage("You must enter RefreshToken");
         }

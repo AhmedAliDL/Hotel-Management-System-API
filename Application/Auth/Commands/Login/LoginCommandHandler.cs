@@ -4,7 +4,7 @@ using Application.Responses;
 using Domain.Entities.User;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 
 
@@ -14,27 +14,26 @@ namespace Application.Auth.Commands.Login
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJwtTokenService _jwtTokenService;
-        private readonly IConfiguration _configuration;
-        public LoginCommandHandler(UserManager<ApplicationUser> userManager, IConfiguration configuration, IJwtTokenService jwtTokenService)
+        public LoginCommandHandler(UserManager<ApplicationUser> userManager, IJwtTokenService jwtTokenService)
         {
             _userManager = userManager;
             _jwtTokenService = jwtTokenService;
-            _configuration = configuration;
         }
         public async Task<ResponseResult<LoginResponseDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            ApplicationUser? user = await _userManager.FindByEmailAsync(request.LoginDto.Email);
+            ApplicationUser? user = await _userManager.Users
+                .Include(u => u.Companies)
+                .Include(u => u.Branches)
+                .Include(u => u.SystemEmployees)
+                .FirstOrDefaultAsync(u => u.Email == request.LoginDto.Email);
 
             if (user is null)
-            {
                 return ResponseResult<LoginResponseDto>.Failure("Invalid email or passowrd");
-            }
+            if (!user.EmailConfirmed)
+                return ResponseResult<LoginResponseDto>.Failure("Email not confirmed");
             var checkPassword = await _userManager.CheckPasswordAsync(user!, request.LoginDto.Password);
             if (!checkPassword)
-            {
                 return ResponseResult<LoginResponseDto>.Failure("Invalid email or passowrd");
-            }
-
             var token = await _jwtTokenService.CreateJWTTokenAsync(user);
             var response = new LoginResponseDto
             {

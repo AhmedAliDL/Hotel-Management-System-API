@@ -13,6 +13,8 @@ using Application.Auth.Queries.Profile;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Security.Claims;
 
 namespace HotelManagmentSystem.Controllers
 {
@@ -27,17 +29,20 @@ namespace HotelManagmentSystem.Controllers
         }
         [HttpGet("Profile")]
         [Authorize]
-        public async Task<IActionResult> Profile([FromBody] string email)
+        public async Task<IActionResult> Profile(string? email)
         {
+            if (email == null)
+                email = User.FindFirstValue(ClaimTypes.Name)!;
             var result = await _mediator.Send(new GetUserProfileQuery(email));
             if (!result.IsSuccess)
                 return NotFound(result);
             return Ok(result);
         }
-        [HttpPost("EditProfile")]
+        [HttpPut("EditProfile")]
         [Authorize]
         public async Task<IActionResult> EditProfile([FromBody] EditProfileDto editProfileDto)
         {
+            editProfileDto.Email = User.FindFirstValue(ClaimTypes.Name)!;
             var result = await _mediator.Send(new EditProfileCommand(editProfileDto));
             if (!result.IsSuccess)
                 return NotFound(result);
@@ -50,6 +55,7 @@ namespace HotelManagmentSystem.Controllers
             return Ok(await _mediator.Send(new RegisterCommand(registerDto)));
         }
         [HttpPost("Login")]
+        [EnableRateLimiting("auth limiter")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             var result = await _mediator.Send(new LoginCommand(loginDto));
@@ -95,16 +101,18 @@ namespace HotelManagmentSystem.Controllers
                 return BadRequest(result);
             return Ok(result);
         }
-        [HttpPost("ChangePassword")]
+        [HttpPatch("ChangePassword")]
         [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
         {
+            changePasswordDto.UserEmail = User.FindFirstValue(ClaimTypes.Name)!;
             var result = await _mediator.Send(new ChangePasswordCommand(changePasswordDto));
             if (!result.IsSuccess)
                 return BadRequest(result);
             return Ok(result);
         }
         [HttpPost("SendPasswordResetToken")]
+        [EnableRateLimiting("auth limiter")]
         public async Task<IActionResult> SendPasswordResetToken([FromBody] string userEmail)
         {
             var result = await _mediator.Send(new SendPasswordResetTokenCommand(userEmail));

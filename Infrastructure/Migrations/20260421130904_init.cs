@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -464,7 +463,7 @@ namespace Infrastructure.Migrations
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     GuestGender = table.Column<int>(type: "int", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GeustPrefereedLanguage = table.Column<int>(type: "int", nullable: false),
+                    GeustPreferredLanguage = table.Column<int>(type: "int", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),

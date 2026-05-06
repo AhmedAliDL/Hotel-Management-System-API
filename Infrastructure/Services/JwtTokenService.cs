@@ -31,13 +31,34 @@ namespace Infrastructure.Services
             {
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Name, user.UserName ?? user.Email ?? string.Empty),
-                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new("IsActive", user.IsActive.ToString()),
             };
-
             var roles = await _userManager.GetRolesAsync(user);
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+            if (user.Companies != null)
+            {
+                foreach (var company in user.Companies)
+                {
+                    claims.Add(new Claim("CompanyId", company.Id.ToString()));
+                }
+            }
+            if (user.Branches != null)
+            {
+                foreach (var branch in user.Branches)
+                {
+                    claims.Add(new Claim("BranchId", branch.Id.ToString()));
+                }
+            }
+            if (user.SystemEmployees != null)
+            {
+                foreach (var systemEmployee in user.SystemEmployees)
+                {
+                    claims.Add(new Claim("SystemEmployeeId", systemEmployee.Id.ToString()));
+                }
             }
 
             var securityKey = new SymmetricSecurityKey(
@@ -69,7 +90,11 @@ namespace Infrastructure.Services
         }
         public async Task<ResponseResult<RefreshTokenDto>> RefreshTokenAsync(string token)
         {
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens!.Any(t => t.Token == token));
+            var user = await _userManager.Users
+                .Include(u => u.Companies)
+                .Include(u => u.Branches)
+                .Include(u => u.SystemEmployees)
+                .SingleOrDefaultAsync(u => u.RefreshTokens!.Any(t => t.Token == token));
             if (user == null)
             {
                 return ResponseResult<RefreshTokenDto>.Failure("User is not found.");
@@ -116,5 +141,6 @@ namespace Infrastructure.Services
 
             return ResponseResult<bool>.Success(true);
         }
+
     }
 }

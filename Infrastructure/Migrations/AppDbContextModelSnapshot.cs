@@ -356,7 +356,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("GeustPrefereedLanguage")
+                    b.Property<int>("GeustPreferredLanguage")
                         .HasColumnType("int");
 
                     b.Property<int>("GuestCountryCodeForPhoneNumber")
